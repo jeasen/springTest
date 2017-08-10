@@ -1,0 +1,219 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.ssm.mapper.PersonMapper" >
+  <resultMap id="BaseResultMap" type="com.ssm.dto.Person" >
+    <id column="id" property="id" jdbcType="INTEGER" />
+    <result column="name" property="name" jdbcType="VARCHAR" />
+    <result column="sex" property="sex" jdbcType="VARCHAR" />
+    <result column="email" property="email" jdbcType="VARCHAR" />
+    <result column="password" property="password" jdbcType="VARCHAR" />
+    <result column="phone" property="phone" jdbcType="VARCHAR" />
+    <result column="ownMoney" property="ownMoney" jdbcType="VARCHAR" />
+    <result column="outMoney" property="outMoney" jdbcType="VARCHAR" />
+    <result column="earnMoney" property="earnMoney" jdbcType="VARCHAR" />
+    <result column="toPerson" property="toPerson" jdbcType="VARCHAR" />
+    <result column="fromPerson" property="fromPerson" jdbcType="VARCHAR" />
+  </resultMap>
+  <sql id="Base_Column_List" >
+    id, name, sex, email, password, phone,ownMoney,outMoney,earnMoney,toPerson,fromPerson
+  </sql>
+
+  <select id="selectByUserName" resultType="java.lang.Integer">
+     select
+     COUNT(*)
+      from personinfo
+     where name = #{name}
+  </select>
+
+  <select id="selectPasswordTrue"   resultType="java.lang.Integer">
+    select COUNT(*) from personinfo
+    where name= #{name} AND password = #{password}
+  </select>
+
+
+  <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.Integer" >
+    select 
+    <include refid="Base_Column_List" />
+    from personinfo
+    where id = #{id,jdbcType=INTEGER}
+  </select>
+
+
+
+  <select id="selectAllInfo" resultMap="BaseResultMap" >
+  	select *from personinfo
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer" >
+    delete from personinfo
+    where id = #{id,jdbcType=INTEGER}
+  </delete>
+  <insert id="insert" parameterType="com.ssm.dto.Person" >
+    insert into personinfo (id, name, sex, 
+      email, password, phone,ownMoney,outMoney,earnMoney,toPerson
+      )
+    values (#{id,jdbcType=INTEGER}, #{name,jdbcType=VARCHAR}, #{sex,jdbcType=VARCHAR}, 
+      #{email,jdbcType=VARCHAR}, #{password,jdbcType=VARCHAR}, #{phone,jdbcType=VARCHAR},
+      #{ownMoney,jdbcType=VARCHAR},#{outMoney,jdbcType=VARCHAR},#{earnMoney,jdbcType=VARCHAR},
+      #{toPerson,jdbcType=VARCHAR}
+      )
+  </insert>
+  <insert id="insertSelective" parameterType="com.ssm.dto.Person" >
+    insert into personinfo
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+      <if test="id != null" >
+        id,
+      </if>
+      <if test="name != null" >
+        name,
+      </if>
+      <if test="sex != null" >
+        sex,
+      </if>
+      <if test="email != null" >
+        email,
+      </if>
+      <if test="password != null" >
+        password,
+      </if>
+      <if test="phone != null" >
+        phone,
+      </if>
+      <if test="ownMoney != null" >
+        ownMoney,
+      </if>
+      <if test="outMoney != null" >
+        outMoney,
+      </if>
+      <if test="earnMoney != null" >
+        earnMoney,
+      </if>
+      <if test="toPerson != null" >
+        toPerson,
+      </if>
+      <if test="fromPerson != null" >
+        fromPerson,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+      <if test="id != null" >
+        #{id,jdbcType=INTEGER},
+      </if>
+      <if test="name != null" >
+        #{name,jdbcType=VARCHAR},
+      </if>
+      <if test="sex != null" >
+        #{sex,jdbcType=VARCHAR},
+      </if>
+      <if test="email != null" >
+        #{email,jdbcType=VARCHAR},
+      </if>
+      <if test="password != null" >
+        #{password,jdbcType=VARCHAR},
+      </if>
+      <if test="phone != null" >
+        #{phone,jdbcType=VARCHAR},
+      </if>
+      <if test="ownMoney != null" >
+        #{ownMoney,jdbcType=VARCHAR},
+      </if>
+      <if test="outMoney != null" >
+        #{outMoney,jdbcType=VARCHAR},
+      </if>
+      <if test="earnMoney != null" >
+        #{earnMoney,jdbcType=VARCHAR},
+      </if>
+      <if test="toPerson != null" >
+        #{toPerson,jdbcType=VARCHAR},
+      </if>
+      <if test="fromPerson != null" >
+        #{fromPerson,jdbcType=VARCHAR},
+      </if>
+    </trim>
+  </insert>
+  <update id="updateByPrimaryKeySelective" parameterType="com.ssm.dto.Person" >
+    update personinfo
+    <set >
+      <if test="name != null" >
+        name = #{name,jdbcType=VARCHAR},
+      </if>
+      <if test="sex != null" >
+        sex = #{sex,jdbcType=VARCHAR},
+      </if>
+      <if test="email != null" >
+        email = #{email,jdbcType=VARCHAR},
+      </if>
+      <if test="password != null" >
+        password = #{password,jdbcType=VARCHAR},
+      </if>
+      <if test="phone != null" >
+        phone = #{phone,jdbcType=VARCHAR},
+      </if>
+      <if test="ownMoney != null" >
+        ownMoney =ownMoney- #{ownMoney,jdbcType=VARCHAR},
+      </if>
+      <if test="outMoney != null" >
+        outMoney = #{outMoney,jdbcType=VARCHAR},
+      </if>
+      <if test="earnMoney != null" >
+        earnMoney = #{earnMoney,jdbcType=VARCHAR},
+      </if>
+      <if test="toPerson != null" >
+        toPerson = #{toPerson,jdbcType=VARCHAR},
+      </if>
+      <if test="fromPerson != null" >
+        fromPerson = #{fromPerson,jdbcType=VARCHAR},
+      </if>
+    </set>
+    where name = #{name,jdbcType=VARCHAR}
+  </update>
+  <update id="updateByPrimaryKeyToPerson" parameterType="com.ssm.dto.Person" >
+    update personinfo
+    <set >
+      <if test="name != null" >
+        name = #{name,jdbcType=VARCHAR},
+      </if>
+      <if test="sex != null" >
+        sex = #{sex,jdbcType=VARCHAR},
+      </if>
+      <if test="email != null" >
+        email = #{email,jdbcType=VARCHAR},
+      </if>
+      <if test="password != null" >
+        password = #{password,jdbcType=VARCHAR},
+      </if>
+      <if test="phone != null" >
+        phone = #{phone,jdbcType=VARCHAR},
+      </if>
+      <if test="ownMoney != null" >
+        ownMoney =ownMoney+ #{ownMoney,jdbcType=VARCHAR},
+      </if>
+      <if test="outMoney != null" >
+        outMoney = #{outMoney,jdbcType=VARCHAR},
+      </if>
+      <if test="earnMoney != null" >
+        earnMoney = #{earnMoney,jdbcType=VARCHAR},
+      </if>
+      <if test="toPerson != null" >
+        toPerson = #{toPerson,jdbcType=VARCHAR},
+      </if>
+      <if test="fromPerson != null" >
+        fromPerson = #{fromPerson,jdbcType=VARCHAR},
+      </if>
+    </set>
+    where name = #{name,jdbcType=VARCHAR}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.ssm.dto.Person" >
+    update personinfo
+    set name = #{name,jdbcType=VARCHAR},
+      sex = #{sex,jdbcType=VARCHAR},
+      email = #{email,jdbcType=VARCHAR},
+      password = #{password,jdbcType=VARCHAR},
+      phone = #{phone,jdbcType=VARCHAR},
+       ownMoney = #{ownMoney,jdbcType=VARCHAR},
+       outMoney = #{outMoney,jdbcType=VARCHAR},
+        earnMoney = #{earnMoney,jdbcType=VARCHAR}
+    where id = #{id,jdbcType=INTEGER}
+  </update>
+
+
+</mapper>

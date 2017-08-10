@@ -1,0 +1,59 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.ssm.mapper.LinestationcopyMapper" >
+  <resultMap id="BaseResultMap" type="com.ssm.dto.Linestationcopy" >
+    <result column="sid" property="sid" jdbcType="INTEGER" />
+    <result column="trainCode" property="traincode" jdbcType="VARCHAR" />
+    <result column="fromStation" property="fromstation" jdbcType="VARCHAR" />
+    <result column="toStation" property="tostation" jdbcType="VARCHAR" />
+    <result column="arriveTime" property="arrivetime" jdbcType="VARCHAR" />
+  </resultMap>
+
+  <sql id="Base_Column_List" >
+    sid, trainCode, fromStation, toStation, arriveTime
+  </sql>
+  <insert id="insert" parameterType="com.ssm.dto.Linestationcopy" >
+    insert into linestationcopy (sid, trainCode, fromStation, 
+      toStation, arriveTime)
+    values (#{sid,jdbcType=INTEGER}, #{traincode,jdbcType=VARCHAR}, #{fromstation,jdbcType=VARCHAR}, 
+      #{tostation,jdbcType=VARCHAR}, #{arrivetime,jdbcType=VARCHAR})
+  </insert>
+  <insert id="insertSelective" parameterType="com.ssm.dto.Linestationcopy" >
+    insert into linestationcopy
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+      <if test="sid != null" >
+        sid,
+      </if>
+      <if test="traincode != null" >
+        trainCode,
+      </if>
+      <if test="fromstation != null" >
+        fromStation,
+      </if>
+      <if test="tostation != null" >
+        toStation,
+      </if>
+      <if test="arrivetime != null" >
+        arriveTime,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+      <if test="sid != null" >
+        #{sid,jdbcType=INTEGER},
+      </if>
+      <if test="traincode != null" >
+        #{traincode,jdbcType=VARCHAR},
+      </if>
+      <if test="fromstation != null" >
+        #{fromstation,jdbcType=VARCHAR},
+      </if>
+      <if test="tostation != null" >
+        #{tostation,jdbcType=VARCHAR},
+      </if>
+      <if test="arrivetime != null" >
+        #{arrivetime,jdbcType=VARCHAR},
+      </if>
+    </trim>
+  </insert>
+
+</mapper>

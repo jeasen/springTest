@@ -1,0 +1,290 @@
+<html>
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+    <title>Insert title here</title>
+    <script src="../dist/js/jquery-2.2.3.min.js"></script>
+    <script src="../dist/vue/vue.js"></script>
+    <script src="../dist/bootstrap-lov/js/lov.js"></script>
+    <script src="../dist/bootstrap-lov/css/lov.css"></script>
+    <script src="../dist/js/bootstrap.js"></script>
+    <script src="../dist/js/bootstrap-table.js"></script>
+    <script src="../dist/js/layer.js"></script>
+    <script src="../dist/js/xcConfirm.js"></script>
+    <link href="../dist/css/xcConfirm.css" rel="stylesheet" type="text/css"/>
+    <link href="../dist/css/layer.css" rel="stylesheet" type="text/css"/>
+    <link href="../dist/css/bootstrap.css" rel="stylesheet" type="text/css"/>
+    <link href="../dist/vue/vue-selection-input.css" rel="stylesheet" type="text/css"/>
+    <script>
+        function loadTable() {
+            $.ajax({
+                url: "/test/person/list",
+                type: "post",
+                dataType: "json",
+                success: function (data) {
+                    if (data != null && data.rows.length !=0) {
+                        for (var i = 0; i < data.rows.length; i++) {
+                           vm.personInfo.push(data.rows[i]);
+                            vm.arrayLength = data.rows.length;
+                          /*vm.personInfo.id = data[i].id;
+                            vm.personInfo.name = data[i].name;
+                            vm.personInfo.sex = data[i].sex;
+                            vm.personInfo.email = data[i].email;
+                            vm.personInfo.password = data[i].password;
+                            vm.personInfo.phone = data[i].phone;
+                            vm.personInfo.ownMoney = data[i].ownMoney;
+                            vm.personInfo.outMoney = data[i].outMoney;
+                            vm.personInfo.earnMoney = data[i].earnMoney;*/
+                            //赋值LOV
+                         /*   $("#isshow").lovTable('setObj',{value:vm.personInfo.id,text:vm.personInfo.name,silent:true});*/
+                        }
+                    }
+                },
+                error: function (data) {
+                    layer.msg("错误");
+                    alert("错误！");
+                }
+            });
+        }
+        function loadLov(clickId){
+            $("#"+clickId).lovTable({
+             title: "编号",
+             placeholder: '请选择对象',
+             valueField: 'id',
+             textField: 'name',
+             rowSelected: function (row) {
+                 vm.personInfo.id = row.id
+                 if(row.name){
+                     vm.personInfo.name = row.name
+                    }
+                 if(row.sex){
+                    vm.personInfo.sex = row.sex
+                     }
+             },
+             setParam:function(){
+                 if(vm.personInfo[0].id){
+                     return {
+                        query:{
+                            'id':vm.personInfo.id,
+                            'name':vm.personInfo.name,
+                            'sex':vm.personInfo.sex
+                         }
+                     }
+                 }
+             }
+             },{
+                 url:'/test/person/list',
+                 columns:[{
+                 field:'id',
+                title: '编号'
+             },{
+                     field: 'name', title: '名字'
+             },{
+                     field: 'sex', title: '性别'
+             }]
+             });
+
+
+        }
+        /*加载name的lov*/
+      /* function loadNameLov() {
+            $('#isshow').lovTable({
+                title: "编号",
+                placeholder: '请选择对象',
+                valueField: 'id',
+                textField: 'name',
+                rowSelected: function (row) {
+                    vm.personInfo.id = row.id
+                    if(row.name){
+                        vm.personInfo.name = row.name
+                    }
+                    if(row.sex){
+                        vm.personInfo.sex = row.sex
+                    }
+                },
+                setParam:function(){
+                    if(vm.personInfo.id){
+                        return {
+                            query:{
+                                'id':vm.personInfo.id,
+                                'name':vm.personInfo.name,
+                                'sex':vm.personInfo.sex
+                            }
+                        }
+                    }
+                }
+            },{
+                url:'/test/person/list',
+                columns:[{
+                    field:'id',
+                    visible:false,
+                },{
+                    field: 'name',
+                    title: '名字'
+                },{
+                    field: 'sex',
+                    title: '性别'
+                }]
+            });
+        }*/
+        $(function () {
+           vm = new Vue({
+               el: "#tableApp",
+               data: {
+                  personInfo:[],
+               },
+               methods:{
+                operate:function (e, event) {
+                       var inputId = event.target.id;
+                      loadLov(inputId);
+                  /*   $("#"+inputId).lovTable({
+                          title: "编号",
+                          placeholder: '请选择对象',
+                          valueField: 'id',
+                          textField: 'name',
+                          rowSelected: function (row) {
+                              vm.personInfo.id = row.id
+                              if(row.name){
+                                  vm.personInfo.name = row.name
+                              }
+                              if(row.sex){
+                                  vm.personInfo.sex = row.sex
+                              }
+                          },
+                          setParam:function(){
+                              if(vm.personInfo[0].id){
+                                  return {
+                                      query:{
+                                          'id':vm.personInfo.id,
+                                          'name':vm.personInfo.name,
+                                          'sex':vm.personInfo.sex
+                                      }
+                                  }
+                              }
+                          }
+                      },{
+                          url:'/test/person/list',
+                          columns:[{
+                              field:'id',
+                              title: '编号'
+                          },{
+                              field: 'name',
+                              title: '名字'
+                          },{
+                              field: 'sex',
+                              title: '性别'
+                          }]
+                       });*/
+                   },
+                   trueInfo:function (e,event) {
+                    var eId = e.id - 1;
+                    var money = $("#isMoney"+eId).val();
+                       var toName = vm.personInfo.name;
+                    if (money !="" && toName!="undefined"){
+                        var txt = e.name +'要给'+toName+'转去'+money+'元';
+                        var date =e.name+','+toName+','+money;
+                        if(parseInt(e.ownMoney) >= parseInt(money) && parseInt(e.ownMoney) > 0){
+                            window.wxc.xcConfirm(txt, window.wxc.xcConfirm.typeEnum.confirm);
+                            $.ajax({
+                                url:'/test/person/getMoneyDate',
+                                data:{
+                                    'personName':date,
+                                },
+                                type:'POST',
+                                success:function (data) {
+                                },
+                                error:function (data) {
+                                    alert("失败")
+                                }
+                            });
+                        }else {
+                            window.wxc.xcConfirm('你的金额不足', window.wxc.xcConfirm.typeEnum.confirm);
+                        }
+                    }else{
+                        alert("请检查接受对象与你的转金额是否为空");
+                    }
+                },
+               }
+           });
+            loadTable();
+
+        });
+
+    </script>
+</head>
+<body>
+<p>success!</p>
+<div id="tableApp">
+    <table class="table table-bordered crm-table">
+        <tr class="crm-title">
+            <td align="center"><label>ID</label></td>
+            <td align="center"><label>name</label></td>
+            <td align="center"><label>sex</label></td>
+            <td align="center"><label>email</label></td>
+            <td align="center"><label>password</label></td>
+            <td align="center"><label>phone</label></td>
+            <td align="center"><label>ownMoney</label></td>
+            <td align="center"><label>earnMoney</label></td>
+            <td align="center"><label>outMoney</label></td>
+            <td align="center"><label>toperson</label></td>
+            <td align="center"><label>fromPerson</label></td>
+            <td align="center"><label>operation</label></td>
+
+        </tr>
+        <tr class="crm-body" v-for="(xl,planIndex) in personInfo">
+            <td align="center">
+                <input type="text" class="form-control input-sm" v-model="xl.id"/>
+            </td>
+            <td align="center">
+                <input type="text" class="form-control input-sm" v-model="xl.name"/>
+            </td>
+            <td align="center">
+                <input type="text" class="form-control input-sm" v-model="xl.sex"/>
+            </td>
+            <td align="center">
+                <input type="text" class="form-control input-sm" v-model="xl.email"/>
+            </td>
+            <td align="center">
+                <input type="text" class="form-control input-sm" v-model="xl.password"/>
+            </td>
+            <td align="center">
+                <input type="text" class="form-control input-sm" v-model="xl.phone"/>
+            </td>
+            <td align="center">
+                <input type="text" class="form-control input-sm" v-model="xl.ownMoney"/>
+            </td>
+            <td align="center">
+                <input type="text" class="form-control input-sm" v-model="xl.earnMoney"/>
+            </td>
+            <td align="center">
+                <input type="text" class="form-control input-sm" v-model="xl.outMoney"/>
+            </td>
+            <td align="center">
+                <input type="text" class="form-control input-sm" v-model="xl.toPerson"/>
+            </td>
+            <td align="center">
+                <input type="text" class="form-control input-sm" v-model="xl.fromPerson"/>
+            </td>
+            <td align="center" >
+                <div id="box">
+                    <input type="text" :id="'isshow'+planIndex" value="转给谁" class="textInput form-control input-sm"
+                           v-on:click="operate(xl,$event)" />
+                    <input type="text" :id="'isMoney'+planIndex"  class="form-control input-sm" placeholder="多少"/>
+                  <!--  <input type="text" :id="'isshow'+planIndex" value="转给谁" class="textInput form-control input-sm"
+                           onclick="operate(planIndex)" />-->
+                    <!--<input type="text" id="isshow" value="zhuang" class="form-control input-sm" v-on:click="operate(xl,$event)"/>-->
+                    <!--<input id="isshow" type="text" value="s" class="form-control input-sm" v-model="xl.id"/>-->
+                    <!--:id="'isshow'+planIndex"-->
+                    <input type="button" class="sgBtn" id="true" v-on:click="trueInfo(xl,$event)"/>
+                </div>
+            </td>
+        </tr>
+
+    </table>
+
+</div>
+<form action="add" method="post">
+    <input type="submit" value="and a new person"/>
+</form>
+<a href="list">flush</a><a href="/test/person/logout">退出</a>
+</body>
+</html>

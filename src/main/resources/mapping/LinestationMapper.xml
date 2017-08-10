@@ -1,0 +1,204 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.ssm.mapper.LinestationMapper" >
+  <resultMap id="BaseResultMap" type="com.ssm.dto.Linestation" >
+    <id column="sid" property="sid" jdbcType="INTEGER" />
+    <result column="trainCode" property="traincode" jdbcType="VARCHAR" />
+    <result column="fromStation" property="fromstation" jdbcType="VARCHAR" />
+    <result column="toStation" property="tostation" jdbcType="VARCHAR" />
+    <result column="arriveTime" property="arrivetime" jdbcType="VARCHAR" />
+    <result column="departTime" property="departtime" jdbcType="VARCHAR" />
+    <result column="stationId" property="stationid" jdbcType="INTEGER" />
+    <result column="stationName" property="stationname" jdbcType="VARCHAR" />
+    <result column="stationNum" property="stationnum" jdbcType="INTEGER" />
+    <result column="stayTime" property="staytime" jdbcType="VARCHAR" />
+    <result column="stopType" property="stoptype" jdbcType="VARCHAR" />
+    <result column="type" property="type" jdbcType="VARCHAR" />
+    <result column="lng" property="lng" jdbcType="VARCHAR" />
+    <result column="lat" property="lat" jdbcType="VARCHAR" />
+  </resultMap>
+
+  <sql id="Base_Column_List" >
+    sid, trainCode, fromStation, toStation, arriveTime, departTime, stationId, stationName, 
+    stationNum, stayTime, stopType, type, lng, lat
+  </sql>
+
+  <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.Integer" >
+    select 
+    <include refid="Base_Column_List" />
+    from linestation
+    where sid = #{sid,jdbcType=INTEGER}
+  </select>
+
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer" >
+    delete from linestation
+    where sid = #{sid,jdbcType=INTEGER}
+  </delete>
+
+  <insert id="insert" parameterType="com.ssm.dto.Linestation" >
+    insert into linestation (sid, trainCode, fromStation, 
+      toStation, arriveTime, departTime, 
+      stationId, stationName, stationNum, 
+      stayTime, stopType, type, 
+      lng, lat)
+    values (#{sid,jdbcType=INTEGER}, #{traincode,jdbcType=VARCHAR}, #{fromstation,jdbcType=VARCHAR}, 
+      #{tostation,jdbcType=VARCHAR}, #{arrivetime,jdbcType=VARCHAR}, #{departtime,jdbcType=VARCHAR}, 
+      #{stationid,jdbcType=INTEGER}, #{stationname,jdbcType=VARCHAR}, #{stationnum,jdbcType=INTEGER}, 
+      #{staytime,jdbcType=VARCHAR}, #{stoptype,jdbcType=VARCHAR}, #{type,jdbcType=VARCHAR}, 
+      #{lng,jdbcType=VARCHAR}, #{lat,jdbcType=VARCHAR})
+  </insert>
+  <insert id="insertSelective" parameterType="com.ssm.dto.Linestation" >
+    insert into linestation
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+      <if test="sid != null" >
+        sid,
+      </if>
+      <if test="traincode != null" >
+        trainCode,
+      </if>
+      <if test="fromstation != null" >
+        fromStation,
+      </if>
+      <if test="tostation != null" >
+        toStation,
+      </if>
+      <if test="arrivetime != null" >
+        arriveTime,
+      </if>
+      <if test="departtime != null" >
+        departTime,
+      </if>
+      <if test="stationid != null" >
+        stationId,
+      </if>
+      <if test="stationname != null" >
+        stationName,
+      </if>
+      <if test="stationnum != null" >
+        stationNum,
+      </if>
+      <if test="staytime != null" >
+        stayTime,
+      </if>
+      <if test="stoptype != null" >
+        stopType,
+      </if>
+      <if test="type != null" >
+        type,
+      </if>
+      <if test="lng != null" >
+        lng,
+      </if>
+      <if test="lat != null" >
+        lat,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+      <if test="sid != null" >
+        #{sid,jdbcType=INTEGER},
+      </if>
+      <if test="traincode != null" >
+        #{traincode,jdbcType=VARCHAR},
+      </if>
+      <if test="fromstation != null" >
+        #{fromstation,jdbcType=VARCHAR},
+      </if>
+      <if test="tostation != null" >
+        #{tostation,jdbcType=VARCHAR},
+      </if>
+      <if test="arrivetime != null" >
+        #{arrivetime,jdbcType=VARCHAR},
+      </if>
+      <if test="departtime != null" >
+        #{departtime,jdbcType=VARCHAR},
+      </if>
+      <if test="stationid != null" >
+        #{stationid,jdbcType=INTEGER},
+      </if>
+      <if test="stationname != null" >
+        #{stationname,jdbcType=VARCHAR},
+      </if>
+      <if test="stationnum != null" >
+        #{stationnum,jdbcType=INTEGER},
+      </if>
+      <if test="staytime != null" >
+        #{staytime,jdbcType=VARCHAR},
+      </if>
+      <if test="stoptype != null" >
+        #{stoptype,jdbcType=VARCHAR},
+      </if>
+      <if test="type != null" >
+        #{type,jdbcType=VARCHAR},
+      </if>
+      <if test="lng != null" >
+        #{lng,jdbcType=VARCHAR},
+      </if>
+      <if test="lat != null" >
+        #{lat,jdbcType=VARCHAR},
+      </if>
+    </trim>
+  </insert>
+
+  <update id="updateByPrimaryKeySelective" parameterType="com.ssm.dto.Linestation" >
+    update linestation
+    <set >
+      <if test="traincode != null" >
+        trainCode = #{traincode,jdbcType=VARCHAR},
+      </if>
+      <if test="fromstation != null" >
+        fromStation = #{fromstation,jdbcType=VARCHAR},
+      </if>
+      <if test="tostation != null" >
+        toStation = #{tostation,jdbcType=VARCHAR},
+      </if>
+      <if test="arrivetime != null" >
+        arriveTime = #{arrivetime,jdbcType=VARCHAR},
+      </if>
+      <if test="departtime != null" >
+        departTime = #{departtime,jdbcType=VARCHAR},
+      </if>
+      <if test="stationid != null" >
+        stationId = #{stationid,jdbcType=INTEGER},
+      </if>
+      <if test="stationname != null" >
+        stationName = #{stationname,jdbcType=VARCHAR},
+      </if>
+      <if test="stationnum != null" >
+        stationNum = #{stationnum,jdbcType=INTEGER},
+      </if>
+      <if test="staytime != null" >
+        stayTime = #{staytime,jdbcType=VARCHAR},
+      </if>
+      <if test="stoptype != null" >
+        stopType = #{stoptype,jdbcType=VARCHAR},
+      </if>
+      <if test="type != null" >
+        type = #{type,jdbcType=VARCHAR},
+      </if>
+      <if test="lng != null" >
+        lng = #{lng,jdbcType=VARCHAR},
+      </if>
+      <if test="lat != null" >
+        lat = #{lat,jdbcType=VARCHAR},
+      </if>
+    </set>
+    where sid = #{sid,jdbcType=INTEGER}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.ssm.dto.Linestation" >
+    update linestation
+    set trainCode = #{traincode,jdbcType=VARCHAR},
+      fromStation = #{fromstation,jdbcType=VARCHAR},
+      toStation = #{tostation,jdbcType=VARCHAR},
+      arriveTime = #{arrivetime,jdbcType=VARCHAR},
+      departTime = #{departtime,jdbcType=VARCHAR},
+      stationId = #{stationid,jdbcType=INTEGER},
+      stationName = #{stationname,jdbcType=VARCHAR},
+      stationNum = #{stationnum,jdbcType=INTEGER},
+      stayTime = #{staytime,jdbcType=VARCHAR},
+      stopType = #{stoptype,jdbcType=VARCHAR},
+      type = #{type,jdbcType=VARCHAR},
+      lng = #{lng,jdbcType=VARCHAR},
+      lat = #{lat,jdbcType=VARCHAR}
+    where sid = #{sid,jdbcType=INTEGER}
+  </update>
+</mapper>
