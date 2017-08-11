@@ -1,14 +1,6 @@
 package com.ssm.controller;
 
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-
 import com.alibaba.fastjson.JSON;
-import com.alibaba.fastjson.JSONArray;
-import com.alibaba.fastjson.JSONObject;
-import com.github.pagehelper.PageInfo;
-import com.google.gson.Gson;
 import com.ssm.dto.Person;
 import com.ssm.service.PersonService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -20,6 +12,9 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 
 /**
@@ -37,7 +32,9 @@ public class PersonController {
 		Person person = new Person();
 		person.setName(request.getParameter("username"));
 		person.setPassword(request.getParameter("password"));
+
 		request.getSession().setAttribute("user",person);
+		System.out.println("sesion     "+request.getSession().getAttribute("user"));
 		if(personService.selectByUser(person)==true){
 			return "list";
 		}else {
