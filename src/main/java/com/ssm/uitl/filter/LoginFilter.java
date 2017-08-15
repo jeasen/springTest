@@ -4,8 +4,10 @@ import javax.servlet.*;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletRequestWrapper;
 import javax.servlet.http.HttpServletResponse;
+import javax.servlet.http.HttpServletResponseWrapper;
 
 import java.io.IOException;
+import java.io.PrintWriter;
 
 /**
  * Created by mm on 2017/8/9.
@@ -28,13 +30,15 @@ public class LoginFilter implements Filter{
         Object obj = serRequest.getSession().getAttribute("user");
        // filterChain.doFilter(serRequest,serReponse);
 
+        HttpResponseWrapper requestWrapper = new HttpResponseWrapper(serReponse);
+
         System.out.print("SJKJ"+obj);
          if (obj != null){
         filterChain.doFilter(serRequest,serReponse);
         System.out.println("有路径"+obj);
          }
 
-        HttpRequestWrapper requestWrapper = new HttpRequestWrapper(serRequest);
+
 
         System.out.println("---xxxx---");/*else{
             serReponse.sendRedirect("/test/person/userLogin");
@@ -48,13 +52,24 @@ public class LoginFilter implements Filter{
 
     }
 }
-class HttpRequestWrapper extends HttpServletRequestWrapper {
+class HttpResponseWrapper extends HttpServletResponseWrapper {
     private String[] str = {"hao","ll"};
-    public HttpRequestWrapper(HttpServletRequest request) {
-        super(request);
+
+    public HttpResponseWrapper(HttpServletResponse response) {
+        super(response);
     }
 
     @Override
+    public void setStatus(int sc) {
+        super.setStatus(sc);
+    }
+
+    @Override
+    public PrintWriter getWriter() throws IOException {
+        return super.getWriter();
+    }
+
+/* @Override
     public String getParameter(String name) {
         String value = super.getParameter(name);
         System.out.println("sssValue"+value);
@@ -66,5 +81,5 @@ class HttpRequestWrapper extends HttpServletRequestWrapper {
             }
         }
         return value;
-    }
+    }*/
 }
