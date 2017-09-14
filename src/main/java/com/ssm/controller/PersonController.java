@@ -4,6 +4,7 @@ import com.alibaba.fastjson.JSON;
 import com.ssm.dto.Person;
 import com.ssm.service.PersonService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Component;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
@@ -21,6 +22,7 @@ import java.util.Map;
  *
  */
 @Controller
+@Component
 @RequestMapping(value = "/person")
 public class PersonController {
 	
@@ -34,7 +36,7 @@ public class PersonController {
 		person.setPassword(request.getParameter("password"));
 
 		request.getSession().setAttribute("user",person);
-		System.out.println("sesion     "+request.getSession().getAttribute("user"));
+		System.out.println("sesion     我执行了！"+request.getSession().getAttribute("user"));
 		if(personService.selectByUser(person)==true){
 			return "list";
 		}else {
@@ -42,6 +44,11 @@ public class PersonController {
 		}
 	};
 
+	//security登录跳转后页面
+	@RequestMapping(value = "/gotoList")
+	public String IntoList(){
+		return "list";
+	}
 
 	@RequestMapping(value="/list",method=RequestMethod.POST)
 	@ResponseBody
@@ -50,6 +57,11 @@ public class PersonController {
 		Map<String,Object> map = new HashMap<String,Object>();
 		map.put("rows",list);
 		return map;
+	}
+
+	@RequestMapping(value = "/gotoAdmin")
+	public String testAdmin(){
+		return "admin";
 	}
 
 	@RequestMapping(value="/listTwo",method=RequestMethod.POST)

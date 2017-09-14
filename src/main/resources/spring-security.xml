@@ -1,16 +1,144 @@
-<b:beans xmlns="http://www.springframework.org/schema/security"
-         xmlns:b="http://www.springframework.org/schema/beans"
-         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-         xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd
-						http://www.springframework.org/schema/security http://www.springframework.org/schema/security/spring-security.xsd">
+<?xml version="1.0" encoding="UTF-8"?>
+<beans:beans xmlns="http://www.springframework.org/schema/beans"
+             xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+             xmlns:security="http://www.springframework.org/schema/security"
+             xmlns:b="http://www.springframework.org/schema/beans"
+             xsi:schemaLocation="http://www.springframework.org/schema/beans
+               http://www.springframework.org/schema/beans/spring-beans-4.2.xsd
+            http://www.springframework.org/schema/security
+            http://www.springframework.org/schema/security/spring-security-4.2.xsd"
+             xmlns:beans="http://www.springframework.org/schema/beans">
 
-    <http />
-
-    <user-service>
+  <!--  <user-service>
         <user name="user" password="password" authorities="ROLE_USER" />
-    </user-service>
+    </user-service>-->
 
-</b:beans>
+    <!--将spring的首页换成自己的页面-->
+    <!--这些页面不算在拦截里面-->
+    <security:http pattern="/index.html" security="none"/>
+    <security:http pattern="/dist/**" security="none"/>
+    <security:http pattern="/admin.html" security="none"/>
+
+    <security:http auto-config="true" use-expressions="true" entry-point-ref="myAuthenticationEntryPoint" >
+        <!--<security:intercept-url pattern="/index.html" access="ROLE_SERVICE"/> 这个是指登录这个页面需要ROLE-ADMIN权限-->
+        <!--这里拦截了所有的路径-->
+
+        <!--authentication-failure-url 出错后跳转的页面-->
+        <!--login 为security4 Spring登录默认跳转的版本-->
+        <!-- default-target-url="/person/gotoList"登录成功后的地址-->
+        <security:form-login login-page="/index.html"
+                             login-processing-url="/**/login"
+                             authentication-failure-url="/index.html?error=true"
+                             authentication-failure-handler-ref="myAuthenticationFailureHandler"
+                             authentication-success-handler-ref="myAuthenticationSuccessHandler"
+                             username-parameter="username"
+                             password-parameter="password"
+        />
+        <security:csrf disabled="true"/><!--security不需要检查token-->
+
+        <security:intercept-url pattern="/user/**" access="hasRole('ROLE_ADMIN')"/>
+        <security:intercept-url pattern="/manager/**" access="hasRole('ROLE_MANAGER')"/>
+
+        <security:logout logout-success-url="/index.html" logout-url="/person/logout"/>
+        <!--session超时,比如被拦截的页面-->
+       <security:session-management invalid-session-url="/index.html?sessionManager=true"/>
+    </security:http>
+
+    <security:authentication-manager>
+        <security:authentication-provider>
+            <security:jdbc-user-service data-source-ref="dataSource" />
+        </security:authentication-provider>
+    </security:authentication-manager>
+
+
+  <!--  <security:authentication-manager>
+        <security:authentication-provider>
+            <security:user-service>
+                <security:user name="admin" password="1234" authorities="ROLE_ADMIN" />
+                <security:user name="mm" password="1234" authorities="ROLE_MANAGER" />
+            </security:user-service>
+        </security:authentication-provider>
+    </security:authentication-manager>-->
+
+    <!-- 被认证请求根据所需权限跳转到不同的登录界面 -->
+    <beans:bean id="myAuthenticationEntryPoint"
+                class="com.ssm.security.MyAuthenticationEntryPoint">
+        <beans:property name="authEntryPointMap" ref="loginFormsMap"></beans:property>
+        <beans:constructor-arg name="loginFormUrl" value="/person/gotoList"></beans:constructor-arg>
+    </beans:bean>
+
+    <!-- 根据不同请求所需权限跳转到不同的登录界面 -->
+   <beans:bean id="loginFormsMap" class="java.util.HashMap">
+        <beans:constructor-arg>
+            <beans:map>
+                <beans:entry key="/manager/**" value="/person/gotoAdmin" />
+                <beans:entry key="/user/**" value="/person/gotoList" />
+            </beans:map>
+        </beans:constructor-arg>
+    </beans:bean>
+
+    <!-- 授权成功后控制 -->
+    <beans:bean id="myAuthenticationSuccessHandler"
+                class="com.ssm.security.MyAuthenticationSuccessHandler">
+        <beans:property name="authDispatcherMap" ref="dispatcherMap"></beans:property>
+    </beans:bean>
+
+    <!-- 根据不同的权限，跳转到不同的页面（直接点击登录页面用） -->
+    <beans:bean id="dispatcherMap" class="java.util.HashMap">
+        <beans:constructor-arg>
+            <beans:map>
+                <beans:entry key="ROLE_ADMIN" value="/person/gotoList?mm=0000"/>
+                <beans:entry key="ROLE_MANAGER" value="/person/gotoList?mm=1222"/>
+            </beans:map>
+        </beans:constructor-arg>
+    </beans:bean>
+
+    <!-- 登录失败后控制 -->
+    <beans:bean id="myAuthenticationFailureHandler"
+                class="com.ssm.security.MyAuthenticationFailureHandler">
+        <beans:property name="loginEntry" ref="myAuthenticationEntryPoint"></beans:property>
+    </beans:bean>
+
+   <!--  被认证请求根据所需权限跳转到不同的登录界面
+    <beans:bean id="myAuthenticationEntryPoint"
+                class="com.ssm.security.MyAuthenticationEntryPoint">
+        <beans:property name="authEntryPointMap" ref="loginFormsMap"></beans:property>
+        <beans:constructor-arg name="loginFormUrl" value="/person/gotoList"></beans:constructor-arg>
+    </beans:bean>
+
+    &lt;!&ndash; 根据不同请求所需权限跳转到不同的登录界面 &ndash;&gt;
+    <beans:bean id="loginFormsMap" class="java.util.HashMap">
+        <beans:constructor-arg>
+            <beans:map>
+                <beans:entry key="/user/**" value="/index.html" />
+                <beans:entry key="/manager/**" value="/manager/index.html" />
+                <beans:entry key="/**" value="/index.html" />
+            </beans:map>
+        </beans:constructor-arg>
+    </beans:bean>
+
+    &lt;!&ndash; 登录且授权成功后控制 &ndash;&gt;
+    <beans:bean id="myAuthenticationSuccessHandler"
+                class="com.ssm.security.MyAuthenticationSuccessHandler">
+        <beans:property name="authDispatcherMap" ref="dispatcherMap"></beans:property>
+    </beans:bean>
+
+    &lt;!&ndash; 根据不同的权限，跳转到不同的页面（直接点击登录页面用） &ndash;&gt;
+    <beans:bean id="dispatcherMap" class="java.util.HashMap">
+        <beans:constructor-arg>
+            <beans:map>
+                <beans:entry key="ROLE_ADMIN" value="/person/gotoList"/>
+            </beans:map>
+        </beans:constructor-arg>
+    </beans:bean>
+
+    &lt;!&ndash;失败了&ndash;&gt;
+    <beans:bean id="myAuthenticationFailureHandler"
+                class="com.ssm.security.MyAuthenticationFailureHandler">
+        <beans:property name="loginEntry" ref="myAuthenticationEntryPoint"></beans:property>
+    </beans:bean>-->
+</beans:beans>
+
 
 
 

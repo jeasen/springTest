@@ -16,19 +16,21 @@ import java.util.List;
 @Service("personService")
 @Transactional
 public class PersonServiceImp implements PersonService{
+
 	@Autowired
-	private PersonMapper personDao;
+	private PersonMapper personMapper;
 
 	//登录
 	@Override
 	public boolean selectByUser(Person person) {
 		boolean index = false ;
+		System.out.println("我执行了！service");
 		String userName = person.getName();
 		System.out.println("username"+userName);
 		if(userName != null){
-			int taget = personDao.selectByUserName(person);
+			int taget = personMapper.selectByUserName(person);
 			if (taget > 0){
-				int passtage = personDao.selectPasswordTrue(person);
+				int passtage = personMapper.selectPasswordTrue(person);
 				if (passtage > 0){
 					index = true;
 				}else {
@@ -43,12 +45,12 @@ public class PersonServiceImp implements PersonService{
 
 	@Override
 	public List<Person> getAllPerson() {
-		return this.personDao.selectAllInfo();
+		return this.personMapper.selectAllInfo();
 	}
 
 	@Override
 	public int insertPerson(Person record) {
-		int index = personDao.insert(record);
+		int index = personMapper.insert(record);
 		return index;
 	}
 
@@ -61,7 +63,7 @@ public class PersonServiceImp implements PersonService{
 	@Override
 	@Transactional(rollbackFor=Exception.class)
 	public int updatePerInfo(Person person) {
-		int target = personDao.updateByPrimaryKeySelective(person);
+		int target = personMapper.updateByPrimaryKeySelective(person);
 		int i = 1/0;
 		updateInPerInfo(person);
 		return target;
@@ -76,7 +78,7 @@ public class PersonServiceImp implements PersonService{
 		person.setName(person.getToPerson());
 		person.setToPerson("");
 		person.setOutMoney("");
-		return personDao.updateByPrimaryKeyToPerson(person);
+		return personMapper.updateByPrimaryKeyToPerson(person);
 	}
 
 	@Override
