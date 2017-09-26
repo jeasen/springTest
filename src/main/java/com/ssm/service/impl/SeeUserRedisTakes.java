@@ -42,4 +42,19 @@ public class SeeUserRedisTakes implements RedisBaiseTakes<String,String,SeeUser>
         }
 
     }
+
+    @Override
+    public void getObj(String objectKey) {
+        if (redisTemplate == null){
+            logger.warning("redisTemplate获取数据失败");
+            System.out.println("=====获取数据失败了====");
+            return;
+        }else{
+            System.out.println("=====获取数据之前=====");
+            String key = String.valueOf(redisTemplate.opsForHash().keys(objectKey));
+            String value = String.valueOf(redisTemplate.opsForHash().values(objectKey));
+            System.out.println("====之后===="+key);
+            System.out.println("====之后后===="+value);
+        }
+    }
 }

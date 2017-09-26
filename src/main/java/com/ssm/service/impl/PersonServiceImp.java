@@ -64,7 +64,7 @@ public class PersonServiceImp implements PersonService{
 	@Transactional(rollbackFor=Exception.class)
 	public int updatePerInfo(Person person) {
 		int target = personMapper.updateByPrimaryKeySelective(person);
-		int i = 1/0;
+		//int i =1/0;       //特意让报个错
 		updateInPerInfo(person);
 		return target;
 

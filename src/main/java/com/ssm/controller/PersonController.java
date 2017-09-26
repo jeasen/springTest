@@ -8,6 +8,7 @@ import org.springframework.stereotype.Component;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 
 import javax.servlet.http.HttpServletRequest;
@@ -16,6 +17,7 @@ import javax.servlet.http.HttpSession;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.stream.Collectors;
 
 
 /**
@@ -80,20 +82,20 @@ public class PersonController {
 			return "list";
 	};
 
-	@RequestMapping(value = "/getMoneyDate",method = RequestMethod.POST)
+	@RequestMapping(value = "/getMoneyDate")
 	@ResponseBody
 	public String getMoneyData(HttpServletRequest request){
 		Person person = new Person();
 		String date =request.getParameter("personName");
 		String[] array = date.split(",");
-		person.setName(array[0]);
-		person.setToPerson(array[1]);
-		person.setOutMoney(array[2]);
-		person.setOwnMoney(array[2]);
+		if (array.length > 0){
+			person.setName(array[0]);
+			person.setToPerson(array[1]);
+			person.setOutMoney(array[2]);
+		}
 		personService.updatePerInfo(person);
 		return "list";
 	};
-
 
 
 
@@ -118,4 +120,7 @@ public class PersonController {
 	public String sureLogin(Person person){
 		return "welcom";
 	}
+
+
+
 }

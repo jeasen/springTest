@@ -89,6 +89,7 @@
             <beans:map>
                 <beans:entry key="ROLE_ADMIN" value="/person/gotoList?mm=0000"/>
                 <beans:entry key="ROLE_MANAGER" value="/person/gotoList?mm=1222"/>
+                <beans:entry key="ROLE_MANAGER" value="/person/gotoList?"/>
             </beans:map>
         </beans:constructor-arg>
     </beans:bean>

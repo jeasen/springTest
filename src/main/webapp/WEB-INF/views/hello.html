@@ -1,10 +1,46 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <title>notitle</title>
-</head>
-<body>
-hello world
-</body>
-</html>
+<#assign base=request.contextPath></#assign>
+    <!DOCTYPE html>
+    <html lang="zh">
+    <base id="base" href="${request.contextPath}">
+    <title>首页</title>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+    <link href="${request.contextPath}/dist/js/bootstrap.js" rel="stylesheet">
+    <link href="${request.contextPath}/dist/js/jquery-2.2.3.min.js" rel="stylesheet">
+
+    <script>
+        $(function () {
+            var base = document.getElementById("base").href;
+            _send = function(async, url, value, success, error) {
+                $.ajax({
+                    async: async,
+                    url: base + '/' + url,
+                    contentType: "application/x-www-form-urlencoded; charset=utf-8",
+                    data: value,
+                    dataType: 'json',
+                    type: 'post',
+                    success: function (data) {
+                        success(data);
+                    },
+                    error: function (data) {
+                        error(data);
+                    }
+                })
+            }
+        })
+        }
+    </script>
+    <body>
+        <div class="hellMain">
+            <table class="table table-bordered crm-table">
+                <tr class="crm-title">
+                    <td align="center"><label>ID</label></td>
+                    <td align="center"><label>name</label></td>
+                    <td align="center"><label>sex</label></td>
+                    <td align="center"><label>email</label></td>
+                </tr>
+                <tr class="crm-title">
+                </tr>
+            </table>
+        </div>
+    </body>
+    </html>

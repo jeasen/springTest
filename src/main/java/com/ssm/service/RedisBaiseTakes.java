@@ -9,4 +9,5 @@ import org.springframework.stereotype.Service;
 public interface RedisBaiseTakes<H,K,I> {
      void addObj(H objectKey,K value);
      void addObj1(H objectKey,K value,I seeUser);
+     void getObj(H objectKey);
 }
